@@ -1,49 +1,88 @@
-
-
-🏙️ Dynamic Urban Parking Pricing with Real-Time Data Streaming
-================================================================
+"""
+===================================================================
+🚗 Dynamic Urban Parking Pricing System (Real-Time with Pathway)
+===================================================================
 
 📌 Description:
-This project simulates an intelligent, real-time pricing engine for urban parking spaces.
-It uses live-like streaming data, economic pricing models, and basic ML logic to dynamically
-adjust prices based on demand, congestion, and real-world conditions.
+This project simulates a real-time, intelligent dynamic pricing engine for urban parking spaces 
+using streamed data, basic ML logic, and economic principles. Prices are updated continuously 
+based on lot occupancy, traffic, queue length, and events.
 
-✅ Features:
-- Ingests real-time parking lot data using Pathway’s stream engine
-- Combines static lot info with dynamic traffic, queue, and occupancy data
-- Implements Model 1 (baseline linear pricing)
-- Framework ready for Model 2 (demand-based) and Model 3 (rerouting + competition)
-- Built with: Python, Pandas, NumPy, and Pathway
-
-🧠 Problem Motivation:
-Urban parking spaces are limited and often inefficiently priced.
-Fixed prices lead to overcrowding in busy lots and underutilization in others.
-Dynamic pricing improves efficiency, utilization, and driver experience.
+🧠 Motivation:
+Static parking prices cause overcrowding or underuse. This project builds a responsive pricing 
+system to optimize space utilization and driver satisfaction in busy urban areas.
 
 🎯 Objective:
-Build a dynamic pricing system that:
-- Starts at a base price of $10
-- Adjusts prices based on real-time occupancy and capacity (Model 1)
-- Supports extension to smarter models using queue length, traffic, special events, vehicle type
-- Suggests rerouting when lots are full (Model 3)
+- Base price starts at $10
+- Price increases with occupancy
+- Supports advanced pricing based on queue, traffic, events, and vehicle type
+- Optional: rerouting logic when lots are full
 
-📈 Models:
-Model 1: Linear pricing
+🧰 Tech Stack:
+- Python 3.11+
+- Pandas & NumPy (data processing)
+- Pathway (real-time data streaming)
+- Matplotlib or Bokeh (optional plots)
+- Google Colab / Jupyter Notebook (for testing)
+
+🗂️ Input Data:
+- 14 parking lots × 73 days
+- 18 samples per day (every 30 min)
+- Fields: Timestamp, Lot ID, Occupancy, Capacity, QueueLength, Traffic, VehicleType, Events
+
+⚙️ Project Workflow:
+1. Load raw dataset (CSV)
+2. Combine LastUpdatedDate + Time → Timestamp
+3. Sort by time and save essential features
+4. Simulate streaming with `Pathway.demo.replay_csv()`
+5. Extract full datetime (`t`) and date (`day`)
+6. Apply pricing logic (Model 1 → Model 2 → Model 3)
+7. Output real-time price stream
+
+📈 Pricing Models:
+
+MODEL 1 — Linear Pricing:
     price = base + α * (occupancy / capacity)
 
-Model 2: Demand-based pricing (planned)
-    price = base * (1 + λ * normalized_demand_score)
-
-Model 3: Smart rerouting + competition-aware pricing (optional)
-
-📂 Input Data:
-- 14 parking lots × 73 days, sampled every 30 minutes
-- Columns: Timestamp, Lot ID, Occupancy, Capacity, QueueLength, VehicleType, Traffic, Events
+MODEL 2 — Demand-Based Pricing:
+    demand = α1*(occupancy/capacity) + β*queue - γ*traffic + δ*event + ε*vehicle
+    price = base × (1 + λ × normalized_demand)
 
 📦 Output:
-- Real-time stream of dynamic prices per lot
-- Console logs or dashboard-ready price stream
-- Easily extendable for plots or file outputs
+- Real-time prices per lot printed to console
+- Optional CSV export or visualization
 
-Author: Anju Yadav
+🧭 Architecture Flow:
+
+    Raw CSV --> Preprocessing --> Feature CSV --> Stream (Pathway)
+                                  |
+                                  v
+                            Time Parsing
+                                  |
+                                  v
+                         Pricing Model (1,2,3)
+                                  |
+                                  v
+                         Output (console/plot)
+
+📂 Project Structure:
+
+urban-parking-pricing/
+├── dataset (1).csv              # Raw parking data
+├── parking_stream_full.csv      # Cleaned data for stream input
+├── main.py                      # Main simulation pipeline
+├── model1_pricing.py            # Pricing logic (modular)
+├── README.md                    # GitHub ReadMe file
+└── report.pdf                   
+
+
+👤 Author:
+- Anju Yadav
+
+
+🔗 Requirements:
+Install via pip:
+    pip install pathway pandas numpy matplotlib bokeh
+"""
+
 
